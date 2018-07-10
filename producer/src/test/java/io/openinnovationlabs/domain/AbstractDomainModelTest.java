@@ -19,7 +19,7 @@ public abstract class AbstractDomainModelTest {
 
     protected static DomainModel domainModel;
     protected static Vertx vertx;
-
+    protected EventStore eventStore;
 
     @After
     public void afterTest(TestContext context) {
@@ -31,7 +31,7 @@ public abstract class AbstractDomainModelTest {
         vertx = Vertx.vertx();
         domainModel = new DomainModel(vertx);
         JsonObject jsonObject = new JsonObject().put("appendOnlyStoreType", "InMemory");
-        vertx.deployVerticle(EventStore.class, new DeploymentOptions().setConfig(jsonObject), context.asyncAssertSuccess());
+        eventStore = EventStore.create(vertx, jsonObject);
     }
 
     public boolean messageBodyOfType(Message<JsonObject> message, Class type) {
